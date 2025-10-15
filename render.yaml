@@ -1,10 +1,15 @@
 services:
   - type: web
     name: mental-health-chatbot
+    runtime: python
     env: python
-    buildCommand: "pip install -r requirements.txt && python -m spacy download en_core_web_sm"
-    startCommand: "gunicorn app:app"
+    region: oregon
+    plan: free
+    buildCommand: "pip install --upgrade pip setuptools wheel && pip install --no-cache-dir -r requirements.txt"
+    startCommand: "gunicorn app:app --workers 1 --threads 2 --timeout 120 --bind 0.0.0.0:$PORT"
     envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
       - key: GROQ_API_KEY
         sync: false
       - key: CHROMA_CLOUD_API_KEY
@@ -13,4 +18,3 @@ services:
         sync: false
       - key: CHROMA_CLOUD_DATABASE
         sync: false
-    plan: free
