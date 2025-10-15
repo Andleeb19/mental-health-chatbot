@@ -5,11 +5,13 @@ services:
     env: python
     region: oregon
     plan: free
-    buildCommand: "pip install --upgrade pip setuptools wheel && pip install --no-cache-dir -r requirements.txt"
-    startCommand: "gunicorn app:app --workers 1 --threads 2 --timeout 120 --bind 0.0.0.0:$PORT"
+    buildCommand: "pip install --upgrade pip && pip install --only-binary=:all: --no-cache-dir -r requirements.txt || pip install --no-cache-dir -r requirements.txt"
+    startCommand: "gunicorn app:app --workers 1 --threads 2 --timeout 120 --bind 0.0.0.0:$PORT --preload"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9
+      - key: PIP_NO_BINARY
+        value: ""
       - key: GROQ_API_KEY
         sync: false
       - key: CHROMA_CLOUD_API_KEY
