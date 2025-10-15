@@ -1,0 +1,20 @@
+# ============================================================================
+# FILE 3: render.yaml
+# ============================================================================
+# Save this as: render.yaml
+services:
+  - type: web
+    name: mental-health-chatbot
+    env: python
+    buildCommand: "pip install -r requirements.txt && python -m spacy download en_core_web_sm"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: CHROMA_CLOUD_API_KEY
+        sync: false
+      - key: CHROMA_CLOUD_TENANT
+        sync: false
+      - key: CHROMA_CLOUD_DATABASE
+        sync: false
+    plan: free
