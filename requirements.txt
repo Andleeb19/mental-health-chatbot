@@ -12,8 +12,8 @@ sentence-transformers==2.7.0
 transformers==4.41.0
 
 # PyTorch CPU-only (smaller, faster, no compilation)
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.3.1+cpu
+torch --index-url https://download.pytorch.org/whl/cpu
+
 
 # ChromaDB
 chromadb==0.4.24
