@@ -153,11 +153,14 @@ def get_embedder():
 # ============================================================================
 # LINGUISTIC ANALYSIS (WITHOUT SPACY)
 # ============================================================================
+
 def analyze_linguistic_features(query):
     """
-    Analyze linguistic features using regex and keyword matching
-    This replaces SpaCy with lightweight pattern matching
+    Simplified linguistic analysis without SpaCy
+    Uses regex and keyword matching instead
     """
+    import re
+    
     features = {
         'has_first_person': False,
         'has_emotion_verb': False,
@@ -166,10 +169,10 @@ def analyze_linguistic_features(query):
     
     query_lower = query.lower()
     
-    # First person detection (comprehensive patterns)
+    # First person detection (more comprehensive)
     first_person_patterns = [
         r'\bi\s', r'\bme\b', r'\bmy\b', r'\bmine\b', r'\bmyself\b',
-        r"i'm\b", r"i've\b", r"i'll\b", r"i'd\b", r'\bim\b'
+        r"i'm\b", r"i've\b", r"i'll\b", r"i'd\b"
     ]
     features['has_first_person'] = any(
         re.search(pattern, query_lower) for pattern in first_person_patterns
@@ -178,8 +181,8 @@ def analyze_linguistic_features(query):
     # Emotion verb detection
     emotion_verbs = [
         'feel', 'feeling', 'felt', 'am', 'being', 'experiencing',
-        'have', 'having', 'had', 'going through', 'dealing with',
-        'struggling', 'suffering', 'facing', 'battling', 'coping'
+        'have', 'having', 'going through', 'dealing with',
+        'struggling', 'suffering', 'facing', 'battling'
     ]
     features['has_emotion_verb'] = any(
         verb in query_lower for verb in emotion_verbs
@@ -188,17 +191,16 @@ def analyze_linguistic_features(query):
     # Subjectivity scoring
     subjectivity = 0.0
     
-    # Base scores
     if features['has_first_person']:
         subjectivity += 0.5
     
     if features['has_emotion_verb']:
         subjectivity += 0.3
     
-    # Additional personal phrases
+    # Additional subjectivity indicators
     personal_phrases = [
         'my ', 'me ', "i'm ", "i feel", "i think", "i believe",
-        "i have", "i've been", "makes me", "i can't", "i dont"
+        "i have", "i've been", "makes me", "i can't"
     ]
     personal_count = sum(1 for phrase in personal_phrases if phrase in query_lower)
     subjectivity += min(personal_count * 0.1, 0.3)
@@ -206,8 +208,8 @@ def analyze_linguistic_features(query):
     # Emotional intensity words
     intensity_words = [
         'very', 'really', 'extremely', 'so', 'too', 'always',
-        'never', 'constantly', "can't", "won't", 'terrible',
-        'awful', 'horrible', 'amazing', 'incredible', 'deeply'
+        'never', 'constantly', 'can\'t', 'won\'t', 'terrible',
+        'awful', 'horrible', 'amazing', 'incredible'
     ]
     intensity_count = sum(1 for word in intensity_words if word in query_lower)
     subjectivity += min(intensity_count * 0.05, 0.2)
@@ -215,7 +217,6 @@ def analyze_linguistic_features(query):
     features['subjectivity_score'] = min(subjectivity, 1.0)
     
     return features
-
 # ============================================================================
 # MENTAL HEALTH CLASSIFIER
 # ============================================================================
@@ -536,3 +537,4 @@ initialize_chromadb()
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
+
