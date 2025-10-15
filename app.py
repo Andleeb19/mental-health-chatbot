@@ -114,12 +114,18 @@ def get_embedder():
 @lru_cache(maxsize=1)
 def get_nlp_model():
     print("📦 Loading spaCy NLP model...")
-    # Download if not exists
     try:
-        nlp = spacy.load("en_core_web_sm")
+        # Try to load the model directly
+        import en_core_web_sm
+        nlp = en_core_web_sm.load()
     except:
-        os.system("python -m spacy download en_core_web_sm")
-        nlp = spacy.load("en_core_web_sm")
+        try:
+            # Fallback to spacy.load
+            nlp = spacy.load("en_core_web_sm")
+        except:
+            print("⚠️ SpaCy model not found, linguistic features will be limited")
+            # Return a basic English model
+            nlp = spacy.blank("en")
     print("✅ spaCy model loaded!")
     return nlp
 
