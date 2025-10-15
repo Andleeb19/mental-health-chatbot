@@ -5,7 +5,8 @@ chromadb==0.5.23
 sentence-transformers==3.3.1
 transformers==4.47.1
 torch==2.5.1
-spacy==3.7.5
+spacy==3
+blis==0.7.10
 scikit-learn==1.6.1
 gunicorn==23.0.0
 python-dotenv==1.0.1
